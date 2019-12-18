@@ -17,4 +17,4 @@ class Customer(models.Model):
 
 
     class Meta:
-        db_table = "Customer"    
+        db_table = "Customer"
