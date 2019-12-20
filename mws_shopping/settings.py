@@ -70,6 +70,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mws_shopping.wsgi.application'
 
+STATIC_ROOT = "static"
+
+STATIC_URL = "/static/"
+
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
