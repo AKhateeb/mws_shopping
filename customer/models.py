@@ -1,6 +1,7 @@
 from django.db import models
 
 class Customer(models.Model):
+    ID = models.IntegerField(primary_key=True)
     MaritalStatus = models.CharField(max_length=7, default="?"*7)
     Gender = models.CharField(max_length=7, default="?"*7)
     Income = models.IntegerField(default=0)
@@ -13,7 +14,12 @@ class Customer(models.Model):
     Region = models.CharField(max_length=13, default="?"*13)      
     Age = models.IntegerField(default=0)      
     Buy = models.CharField(max_length=3, default="?"*3)  
-    OrderNumber = models.ForeignKey(to="order.Order", on_delete=models.CASCADE)
+    # OrderNumber = models.CharField(max_length=30, default="?"*3)  
+    # OrderNo = models.ForeignKey(
+    #     to="order.Order",
+    #     to_field="OrderNumber",
+    #     on_delete=models.CASCADE,
+    #     db_column='OrderNumber')
 
 
     class Meta:
