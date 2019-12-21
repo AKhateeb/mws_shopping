@@ -43,7 +43,7 @@ class OrderView(ModelViewSet):
 
 
 def get_recommends(request):
-    Products = OrderDetails.objects.all().values('Product')[:150:5]
+    Products = OrderDetails.objects.all().values('Product').distinct()[5:100:5]
     data = list(Products)
     return return_response(data, True)
 
