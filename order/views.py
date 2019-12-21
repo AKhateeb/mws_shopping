@@ -8,6 +8,9 @@ from rest_framework.decorators import action
 from .models import Order, OrderDetails
 from customer.models import Customer
 from .serializer import OrderSerializer
+from django.http.response import JsonResponse
+from django.db.models import Sum
+
 
 KEYS = {
     'commute_list': [
@@ -23,8 +26,8 @@ def get_customer_attributes(data):
     return Customer.objects.all()
 
 def return_response(data, is_valid=False):
-    status_code = status.HTTP_200_OK if is_valid else status.HTTP_400_BAD_REQUEST
-    return Response(data, status=status_code)
+    # status_code = 200
+    return JsonResponse(data, safe=False)
 
 class OrderPagination(PageNumberPagination):
     page_size = 10
@@ -39,10 +42,37 @@ class OrderView(ModelViewSet):
     pagination_class = OrderPagination
 
 
-class FindOrderView(APIView):
+def get_recommends(request):
+    Products = OrderDetails.objects.all().values('Product')[:150:5]
+    data = list(Products)
+    return return_response(data, True)
+
+def freq_together(request):
+    # products = request.data.get('products', "")
+    # prods = products.split(",")
+    # orders = (
+    #     OrderDetails.objects
+    #     .filter(Product__in=prods)
+    #     .values('OrderNumber')
+    # )
+    Products = OrderDetails.objects.all().values('Product').distinct()[:15:5]
+    data = list(Products)
+    return return_response(data, True)
+
+def predict_sales(request):
+    # ids = request.data.get('products', None)
+    qry = OrderDetails.objects.filter(ProductPrice__gt=50).aggregate(predicted_sales=Sum('ProductPrice'))
+    data = qry
+    return return_response(data, True)
+
+def find_corelate_product(request):
+    # ids = request.data.get('products', None)
+    # qry = OrderDetails.objects.filter(Product__in=ids).values('Product')
+    Products = OrderDetails.objects.all().values('Product')[:105:50]
     
-    @action(methods=['GET'], detail=False, name='get orders of a customer attributes')
-    def by_customer(self, request):
-        customer_queryset = get_customer_attributes(data=request.data)
-        data = list(customer_queryset)
-        return return_response(data, True)
+    data = list(Products)
+
+    return return_response(data, True)
+
+
+
